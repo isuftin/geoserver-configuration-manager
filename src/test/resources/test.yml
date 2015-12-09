@@ -1,4 +1,5 @@
 ---
+wipeDefaultWorkspaces: true
 workspaces:
     - name: yaml.test.workspace
       uri: yaml.test.workspace.uri
