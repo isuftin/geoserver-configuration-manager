@@ -69,8 +69,9 @@
 							</execution>
 						</executions>
 					</plugin>
-			
-			
+					
+					<!-- Kick off a Geoserver Docker container. This requires your
+					system to have docker or docker-machine installed -->
 					<plugin>
 						<groupId>net.wouterdanes.docker</groupId>
 						<artifactId>docker-maven-plugin</artifactId>
@@ -85,7 +86,7 @@
 									<images>
 										<image>
 											<id>isuftin/geoserver</id>
-											<dockerFile>${project.basedir}/src/main/resources/docker/Dockerfile</dockerFile>
+											<dockerFile>${project.basedir}/src/test/resources/docker/Dockerfile</dockerFile>
 											<nameAndTag>
 												isuftin/geoserver:${version.geoserver}
 											</nameAndTag>
