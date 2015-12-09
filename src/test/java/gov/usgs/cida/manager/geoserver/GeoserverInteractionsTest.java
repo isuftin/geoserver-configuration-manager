@@ -49,14 +49,20 @@ public class GeoserverInteractionsTest implements IntegrationTests {
 	@Test
 	public void testIsAvailable() throws MalformedURLException {
 		System.out.println("testIsAvailable");
-		GeoserverInteractions instance = new GeoserverInteractions(geoserverEndpoint, "admin", "geoserver");
+		GeoserverInteractions instance = new GeoserverInteractions(
+				geoserverEndpoint, 
+				GeoserverInteractions.DEFAULT_USER, 
+				GeoserverInteractions.DEFAULT_PASS);
 		assertTrue(instance.isAvailable());
 	}
 
 	@Test
 	public void testExistsDatastore() throws MalformedURLException {
 		System.out.println("testExistsDatastore");
-		GeoserverInteractions instance = new GeoserverInteractions(geoserverEndpoint, "admin", "geoserver");
+		GeoserverInteractions instance = new GeoserverInteractions(
+				geoserverEndpoint, 
+				GeoserverInteractions.DEFAULT_USER, 
+				GeoserverInteractions.DEFAULT_PASS);
 		assertTrue(instance.existsDatastore("topp", "states_shapefile", false));
 		assertTrue(instance.existsDatastore("topp", "taz_shapes", false));
 		assertFalse(instance.existsDatastore("topp", "tasmania_wateR_bodies", false));
