@@ -1,6 +1,8 @@
 package gov.usgs.cida.manager.geoserver;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -69,7 +71,7 @@ public class GeoserverInteractionsTest implements IntegrationTests {
 	}
 	
 	@Test
-	public void testCreateAndReadWorkspace()  throws MalformedURLException {
+	public void testCreateAndReadWorkspace()  throws MalformedURLException, URISyntaxException {
 		System.out.println("testCreateAndReadWorkspace");
 		GeoserverInteractions instance = new GeoserverInteractions(
 				geoserverEndpoint, 
@@ -77,6 +79,8 @@ public class GeoserverInteractionsTest implements IntegrationTests {
 				GeoserverInteractions.DEFAULT_PASS);
 		assertTrue(instance.createWorkspace("workspace.test", null));
 		assertTrue(instance.existsWorkspace("workspace.test", false));
+		assertTrue(instance.createWorkspace("test.workspace.test", new URI("test.workspace.test")));
+		assertTrue(instance.existsWorkspace("test.workspace.test", false));
 	}
 	
 	
