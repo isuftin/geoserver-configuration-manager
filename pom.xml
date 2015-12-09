@@ -18,11 +18,12 @@
 	</properties>
 	
 	<repositories>
+		<!-- Geoserver Manager -->
 		<repository>
 			<id>GeoSolutions</id>
 			<url>http://maven.geo-solutions.it/</url>
 		</repository>
-	</repositories>
+		</repositories>
 	
 	<profiles>
 		<!-- 
@@ -141,7 +142,7 @@
 			</plugin>
 			
 			<!-- Make sure not to run the integration tests during the test phase -->
-			<plugin>
+			<!--			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${version.surefire}</version>
@@ -158,15 +159,15 @@
 					</includes>
 					<excludedGroups>gov.usgs.cida.manager.geoserver.IntegrationTests</excludedGroups>
 				</configuration>
-			</plugin>
+			</plugin>-->
 		</plugins>
 	</build>
 	
 	<dependencies>
 		<dependency>
-			<groupId>com.esotericsoftware.yamlbeans</groupId>
-			<artifactId>yamlbeans</artifactId>
-			<version>1.09</version>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.16</version>
 		</dependency>
 
 		<dependency>

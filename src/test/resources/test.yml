@@ -1,0 +1,5 @@
+---
+workspaces:
+    - name: yaml.test.workspace
+      uri: yaml.test.workspace.uri
+    - name: another.yaml.test.workspace
