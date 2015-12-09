@@ -81,6 +81,8 @@ public class GeoserverInteractionsTest implements IntegrationTests {
 		assertTrue(instance.existsWorkspace("workspace.test", false));
 		assertTrue(instance.createWorkspace("test.workspace.test", new URI("test.workspace.test")));
 		assertTrue(instance.existsWorkspace("test.workspace.test", false));
+		assertFalse(instance.existsWorkspace("test.workspace.tesT", false));
+		assertFalse(instance.existsWorkspace("this.doesnt.exist", false));
 	}
 	
 	

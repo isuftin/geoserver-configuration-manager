@@ -23,7 +23,110 @@
 			<url>http://maven.geo-solutions.it/</url>
 		</repository>
 	</repositories>
-
+	
+	<profiles>
+		<!-- 
+		mvn clean install -Pdocker-it
+		--> 
+		<profile>
+			<id>docker-it</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					
+					<!-- And DO run the integration tests during the test phase -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>${version.surefire}</version>
+						<dependencies>
+							<dependency>
+								<groupId>org.apache.maven.surefire</groupId>
+								<artifactId>surefire-junit47</artifactId>
+								<version>${version.surefire}</version>
+							</dependency>
+						</dependencies>
+						<configuration>
+							<groups>gov.usgs.cida.manager.geoserver.IntegrationTests</groups>
+							<systemPropertyVariables>
+								<geoserver.host>${docker.containers.geoserver.ports.8080/tcp.host}</geoserver.host>
+								<geoserver.port>${docker.containers.geoserver.ports.8080/tcp.port}</geoserver.port>
+							</systemPropertyVariables>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>integration-test</goal>
+									<goal>verify</goal>
+								</goals>
+								<configuration>
+									<includes>
+										<include>**/*.class</include>
+									</includes>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+			
+			
+					<plugin>
+						<groupId>net.wouterdanes.docker</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<version>4.1.0</version>
+						<executions>
+							<execution>
+								<id>package</id>
+								<goals>
+									<goal>build-images</goal>
+								</goals>
+								<configuration>
+									<images>
+										<image>
+											<id>isuftin/geoserver</id>
+											<dockerFile>${project.basedir}/src/main/resources/docker/Dockerfile</dockerFile>
+											<nameAndTag>
+												isuftin/geoserver:${version.geoserver}
+											</nameAndTag>
+											<keep>true</keep>
+										</image>
+									</images>
+								</configuration>
+							</execution>
+							<execution>
+								<id>start</id>
+								<goals>
+									<goal>start-containers</goal>
+								</goals>
+								<configuration>
+									<forceCleanup>true</forceCleanup>
+									<containers>
+										<container>
+											<id>geoserver</id>
+											<image>isuftin/geoserver:${version.geoserver}</image>
+											<hostname>geoserver</hostname>
+											<waitForStartup>Started SelectChannelConnector@0.0.0.0:8080</waitForStartup>
+										</container>
+									</containers>
+								</configuration>
+							</execution>
+							<execution>
+								<id>stop</id>
+								<goals>
+									<goal>stop-containers</goal>
+								</goals>
+								<configuration>
+									<logs>${project.build.directory}/logs</logs>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -55,97 +158,16 @@
 					<excludedGroups>gov.usgs.cida.manager.geoserver.IntegrationTests</excludedGroups>
 				</configuration>
 			</plugin>
-			<!-- And DO run the integration tests during the test phase -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>${version.surefire}</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.surefire</groupId>
-						<artifactId>surefire-junit47</artifactId>
-						<version>${version.surefire}</version>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<groups>gov.usgs.cida.manager.geoserver.IntegrationTests</groups>
-					<systemPropertyVariables>
-						<geoserver.host>${docker.containers.geoserver.ports.8080/tcp.host}</geoserver.host>
-						<geoserver.port>${docker.containers.geoserver.ports.8080/tcp.port}</geoserver.port>
-					</systemPropertyVariables>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>**/*.class</include>
-							</includes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			
-			
-			<plugin>
-				<groupId>net.wouterdanes.docker</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>4.1.0</version>
-				<executions>
-					<execution>
-						<id>package</id>
-						<goals>
-							<goal>build-images</goal>
-						</goals>
-						<configuration>
-							<images>
-								<image>
-									<id>isuftin/geoserver</id>
-									<dockerFile>${project.basedir}/src/main/resources/docker/Dockerfile</dockerFile>
-									<nameAndTag>
-										isuftin/geoserver:${version.geoserver}
-									</nameAndTag>
-									<keep>true</keep>
-								</image>
-							</images>
-						</configuration>
-					</execution>
-					<execution>
-						<id>start</id>
-						<goals>
-							<goal>start-containers</goal>
-						</goals>
-						<configuration>
-							<forceCleanup>true</forceCleanup>
-							<containers>
-								<container>
-									<id>geoserver</id>
-									<image>isuftin/geoserver:${version.geoserver}</image>
-									<hostname>geoserver</hostname>
-									<waitForStartup>Started SelectChannelConnector@0.0.0.0:8080</waitForStartup>
-								</container>
-							</containers>
-						</configuration>
-					</execution>
-					<execution>
-						<id>stop</id>
-						<goals>
-							<goal>stop-containers</goal>
-						</goals>
-						<configuration>
-							<logs>${project.build.directory}/logs</logs>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			
 		</plugins>
 	</build>
 	
 	<dependencies>
+		<dependency>
+			<groupId>com.esotericsoftware.yamlbeans</groupId>
+			<artifactId>yamlbeans</artifactId>
+			<version>1.09</version>
+		</dependency>
+
 		<dependency>
 			<groupId>it.geosolutions</groupId>
 			<artifactId>geoserver-manager</artifactId>
