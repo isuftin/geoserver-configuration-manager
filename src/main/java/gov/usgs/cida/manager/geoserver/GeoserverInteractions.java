@@ -1,10 +1,9 @@
 package gov.usgs.cida.manager.geoserver;
 
 import it.geosolutions.geoserver.rest.GeoServerRESTManager;
-import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
-import it.geosolutions.geoserver.rest.GeoServerRESTReader;
 import it.geosolutions.geoserver.rest.decoder.RESTDataStoreList;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -36,6 +35,25 @@ public class GeoserverInteractions {
 			if (ignoreCase && storeName.equalsIgnoreCase(datastore)) {
 				return true;
 			} else if (!ignoreCase && storeName.equals(datastore)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean createWorkspace(String name, URI uri) {
+		if (uri == null) {
+			return mgr.getPublisher().createWorkspace(name);
+		} else {
+			return mgr.getPublisher().createWorkspace(name, uri);
+		}
+	}
+	
+	public boolean existsWorkspace(String workspace, boolean ignoreCase) {
+		for (String workspaceName : mgr.getReader().getWorkspaceNames()) {
+			if (ignoreCase && workspaceName.equalsIgnoreCase(workspace)) {
+				return true;
+			} else if (!ignoreCase && workspaceName.equals(workspace)) {
 				return true;
 			}
 		}

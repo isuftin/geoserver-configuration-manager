@@ -67,5 +67,18 @@ public class GeoserverInteractionsTest implements IntegrationTests {
 		assertTrue(instance.existsDatastore("topp", "taz_shapes", false));
 		assertFalse(instance.existsDatastore("topp", "tasmania_wateR_bodies", false));
 	}
+	
+	@Test
+	public void testCreateAndReadWorkspace()  throws MalformedURLException {
+		System.out.println("testCreateAndReadWorkspace");
+		GeoserverInteractions instance = new GeoserverInteractions(
+				geoserverEndpoint, 
+				GeoserverInteractions.DEFAULT_USER, 
+				GeoserverInteractions.DEFAULT_PASS);
+		assertTrue(instance.createWorkspace("workspace.test", null));
+		assertTrue(instance.existsWorkspace("workspace.test", false));
+	}
+	
+	
 
 }
