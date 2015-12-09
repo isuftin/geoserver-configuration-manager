@@ -6,11 +6,13 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 /**
  *
  * @author isuftin
  */
+@Category(IntegrationTests.class)
 public class InteractionsTest implements IntegrationTests {
 
 	public InteractionsTest() {
@@ -40,6 +42,8 @@ public class InteractionsTest implements IntegrationTests {
 		System.out.println("isAvailable");
 		Interactions instance = null;
 		boolean expResult = true;
+		System.out.println(System.getProperty("geoserver.host"));
+		System.out.println(System.getProperty("geoserver.port"));
 //		boolean result = instance.isAvailable();
 		assertEquals(true, true);
 //		fail("The test case is a prototype.");
