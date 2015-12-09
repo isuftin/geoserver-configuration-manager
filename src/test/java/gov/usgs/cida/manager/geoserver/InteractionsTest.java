@@ -1,5 +1,7 @@
 package gov.usgs.cida.manager.geoserver;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -14,12 +16,15 @@ import org.junit.experimental.categories.Category;
  */
 @Category(IntegrationTests.class)
 public class InteractionsTest implements IntegrationTests {
-
+	private static String host;
+	private static int port;
 	public InteractionsTest() {
 	}
 
 	@BeforeClass
 	public static void setUpClass() {
+		host = System.getProperty("geoserver.host");
+		port = Integer.parseInt(System.getProperty("geoserver.port"));
 	}
 
 	@AfterClass
@@ -38,15 +43,10 @@ public class InteractionsTest implements IntegrationTests {
 	 * Test of isAvailable method, of class Interactions.
 	 */
 	@Test
-	public void testIsAvailable() {
-		System.out.println("isAvailable");
-		Interactions instance = null;
-		boolean expResult = true;
-		System.out.println(System.getProperty("geoserver.host"));
-		System.out.println(System.getProperty("geoserver.port"));
-//		boolean result = instance.isAvailable();
-		assertEquals(true, true);
-//		fail("The test case is a prototype.");
+	public void testIsAvailable() throws MalformedURLException {
+		System.out.println("testIsAvailable");
+		Interactions instance = new Interactions(new URL(String.format("http://%s:%s/geoserver", host, port)), "admin", "geoserver");
+		assertTrue(instance.isAvailable());
 	}
 
 }

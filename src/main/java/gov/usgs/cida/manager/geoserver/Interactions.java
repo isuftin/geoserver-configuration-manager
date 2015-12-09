@@ -16,12 +16,12 @@ public class Interactions {
 	private static GeoServerRESTPublisher publisher;
 
 	protected Interactions(URL geoserverEndpoint) {
-		this(geoserverEndpoint, DEFAULT_PASS, DEFAULT_USER);
+		this(geoserverEndpoint, DEFAULT_USER, DEFAULT_PASS);
 		
 	}
 	protected Interactions(URL geoserverEndpoint, String user, String pass) {
-		reader = new GeoServerRESTReader(geoserverEndpoint, DEFAULT_PASS, DEFAULT_USER);
-		publisher = new GeoServerRESTPublisher(geoserverEndpoint.toString(), DEFAULT_PASS, DEFAULT_USER);
+		reader = new GeoServerRESTReader(geoserverEndpoint, user, pass);
+		publisher = new GeoServerRESTPublisher(geoserverEndpoint.toString(), user, pass);
 	}
 	
 	public boolean isAvailable() {
