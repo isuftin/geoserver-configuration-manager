@@ -1,5 +1,5 @@
 geoserver_manager:
-    build: ./src/main/resources/docker
+    build: ./src/test/resources/docker
     hostname: geoserver
     ports:
         - "8080:8080"

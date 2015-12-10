@@ -9,14 +9,14 @@ import java.util.List;
  */
 public class GeoserverConfig {
 
-	private List<GeoserverWorkspace> workspaces;
+	private List<Workspace> workspaces;
 	private boolean wipeDefaultWorkspaces = false;
 
-	public List<GeoserverWorkspace> getWorkspaces() {
+	public List<Workspace> getWorkspaces() {
 		return new ArrayList<>(workspaces);
 	}
 
-	public void setWorkspaces(List<GeoserverWorkspace> workspaces) {
+	public void setWorkspaces(List<Workspace> workspaces) {
 		this.workspaces = new ArrayList<>(workspaces);
 	}
 

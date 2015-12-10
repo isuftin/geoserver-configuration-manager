@@ -3,4 +3,18 @@ wipeDefaultWorkspaces: true
 workspaces:
     - name: yaml.test.workspace
       uri: yaml.test.workspace.uri
+      datastores:
+          - name: yaml.test.store
+            # Types available:
+            # shapefile
+            # shapefileDirectory
+            # postgis
+            # oracle
+            # arcsde
+            type: shapefile
+            # http://www.diva-gis.org/gdata
+            url: http://biogeo.ucdavis.edu/data/diva/rds/USA_rds.zip
+            description: A test datastore
+            enabled: true
+                
     - name: another.yaml.test.workspace

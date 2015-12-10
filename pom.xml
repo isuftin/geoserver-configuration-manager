@@ -142,7 +142,7 @@
 			</plugin>
 			
 			<!-- Make sure not to run the integration tests during the test phase -->
-			<plugin>
+<!--			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${version.surefire}</version>
@@ -159,7 +159,7 @@
 					</includes>
 					<excludedGroups>gov.usgs.cida.manager.geoserver.IntegrationTests</excludedGroups>
 				</configuration>
-			</plugin>
+			</plugin>-->
 		</plugins>
 	</build>
 	
@@ -222,6 +222,12 @@
 			<artifactId>commons-logging</artifactId>
 			<version>1.2</version>
 		</dependency>
+	 <dependency>
+	  <groupId>org.apache.commons</groupId>
+	  <artifactId>commons-lang3</artifactId>
+	  <version>3.4</version>
+	  <type>jar</type>
+	 </dependency>
 	</dependencies>
 	
 </project>
