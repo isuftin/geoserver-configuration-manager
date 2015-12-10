@@ -8,7 +8,8 @@ import java.util.List;
  * @author isuftin
  */
 public class GeoserverConfig {
-
+	private String username;
+	private String password;
 	private List<Workspace> workspaces;
 	private boolean wipeDefaultWorkspaces = false;
 
@@ -26,6 +27,22 @@ public class GeoserverConfig {
 
 	public void setWipeDefaultWorkspaces(boolean wipeDefaultWorkspaces) {
 		this.wipeDefaultWorkspaces = wipeDefaultWorkspaces;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

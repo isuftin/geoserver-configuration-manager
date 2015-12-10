@@ -1,9 +1,11 @@
 package gov.usgs.cida.manager.geoserver;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -22,6 +24,7 @@ public class GeoserverInteractionsTest implements IntegrationTests {
 	private static String host;
 	private static int port;
 	private static URL geoserverEndpoint;
+	private static File yamlFile;
 
 	public GeoserverInteractionsTest() {
 	}
@@ -39,6 +42,7 @@ public class GeoserverInteractionsTest implements IntegrationTests {
 
 	@Before
 	public void setUp() {
+		yamlFile = FileUtils.toFile(this.getClass().getResource("/test.yml"));
 	}
 
 	@After

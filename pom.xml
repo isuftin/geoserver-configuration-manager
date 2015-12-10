@@ -23,7 +23,7 @@
 			<id>GeoSolutions</id>
 			<url>http://maven.geo-solutions.it/</url>
 		</repository>
-		</repositories>
+	</repositories>
 	
 	<profiles>
 		<!-- 
@@ -142,7 +142,7 @@
 			</plugin>
 			
 			<!-- Make sure not to run the integration tests during the test phase -->
-<!--			<plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${version.surefire}</version>
@@ -159,11 +159,17 @@
 					</includes>
 					<excludedGroups>gov.usgs.cida.manager.geoserver.IntegrationTests</excludedGroups>
 				</configuration>
-			</plugin>-->
+			</plugin>
 		</plugins>
 	</build>
 	
 	<dependencies>
+		<dependency>
+			<groupId>args4j</groupId>
+			<artifactId>args4j</artifactId>
+			<version>2.32</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
@@ -178,6 +184,10 @@
 				<exclusion>
 					<groupId>org.slf4j</groupId>
 					<artifactId>jcl-over-slf4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -201,11 +211,23 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.1.3</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>log4j-over-slf4j</artifactId>
 			<version>1.7.13</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<artifactId>slf4j-api</artifactId>
@@ -222,12 +244,12 @@
 			<artifactId>commons-logging</artifactId>
 			<version>1.2</version>
 		</dependency>
-	 <dependency>
-	  <groupId>org.apache.commons</groupId>
-	  <artifactId>commons-lang3</artifactId>
-	  <version>3.4</version>
-	  <type>jar</type>
-	 </dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+			<type>jar</type>
+		</dependency>
 	</dependencies>
 	
 </project>
