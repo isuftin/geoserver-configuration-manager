@@ -1,13 +1,15 @@
 package gov.usgs.cida.manager.geoserver.model;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Represents a Geoserver workspace
+ * Represents a GeoServer workspace
  *
- * @see <a href="http://docs.geoserver.org/stable/en/user/rest/api/workspaces.html#workspaces">http://docs.geoserver.org/stable/en/user/rest/api/workspaces.html#workspaces</a>
+ * @see
+ * <a href="http://docs.geoserver.org/stable/en/user/rest/api/workspaces.html#workspaces">http://docs.geoserver.org/stable/en/user/rest/api/workspaces.html#workspaces</a>
  * @author isuftin
  */
 public class Workspace {
@@ -36,14 +38,14 @@ public class Workspace {
 	}
 
 	public List<Datastore> getDatastores() {
-		return datastores;
+		return new ArrayList<>(datastores);
 	}
 
 	public void setDatastores(List<Datastore> datastores) {
-		for (Datastore datastore : datastores) {
-			datastore.setWorkspaceName(this.name);
-		}
-		this.datastores = datastores;
+		this.datastores = new ArrayList<>(datastores);
+		this.datastores.stream().forEach(
+				(datastore) -> datastore.setWorkspaceName(this.name)
+		);
 	}
 
 }
