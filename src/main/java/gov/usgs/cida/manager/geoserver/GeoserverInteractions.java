@@ -60,6 +60,16 @@ class GeoserverInteractions {
 		}
 	}
 	
+	/**
+	 * @see it.geosolutions.geoserver.rest.GeoServerRESTPublisher#removeWorkspace(java.lang.String, boolean) 
+	 * @param name
+	 * @param recurse
+	 * @return 
+	 */
+	public boolean removeWorkspace(String name, boolean recurse) {
+		return mgr.getPublisher().removeWorkspace(name , recurse);
+	}
+	
 	public boolean existsWorkspace(String workspace, boolean ignoreCase) {
 		for (String workspaceName : mgr.getReader().getWorkspaceNames()) {
 			if (ignoreCase && workspaceName.equalsIgnoreCase(workspace)) {

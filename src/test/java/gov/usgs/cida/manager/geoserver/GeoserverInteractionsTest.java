@@ -73,8 +73,14 @@ public class GeoserverInteractionsTest implements IntegrationTests {
 				GeoserverInteractions.DEFAULT_PASS);
 		assertTrue(instance.createWorkspace("workspace.test", null));
 		assertTrue(instance.existsWorkspace("workspace.test", false));
+		assertTrue(instance.removeWorkspace("workspace.test", true));
+		assertFalse(instance.existsWorkspace("workspace.test", false));
+
 		assertTrue(instance.createWorkspace("test.workspace.test", new URI("test.workspace.test")));
 		assertTrue(instance.existsWorkspace("test.workspace.test", false));
+		assertTrue(instance.removeWorkspace("test.workspace.test", true));
+		assertFalse(instance.existsWorkspace("test.workspace.test", false));
+
 		assertFalse(instance.existsWorkspace("test.workspace.tesT", false));
 		assertFalse(instance.existsWorkspace("this.doesnt.exist", false));
 	}
@@ -90,7 +96,7 @@ public class GeoserverInteractionsTest implements IntegrationTests {
 		assertTrue(instance.existsDatastore("topp", "taz_shapes", false));
 		assertFalse(instance.existsDatastore("topp", "tasmania_wateR_bodies", false));
 	}
-	
+
 	@Test
 	public void testInteractWithShapefileDatastore() throws MalformedURLException, URISyntaxException {
 		System.out.println("testCreateShapefileDatastore");
@@ -103,12 +109,12 @@ public class GeoserverInteractionsTest implements IntegrationTests {
 		workspace.setUri(new URI("gov.usgs.cida.manager.geoserver"));
 		instance.createWorkspace(workspace);
 		instance.existsWorkspace(workspace.getName(), false);
-		
+
 		Datastore datastore = new Datastore(workspace.getName(), "testCreateShapefileDatastoreWorkdspaceTest", new URL("file:///test"));
 		datastore.setDatastoreType(Datastore.TYPE.SHAPEFILE);
 		assertTrue(instance.createDataStore(datastore));
 		assertTrue(instance.existsDatastore(workspace.getName(), datastore.getName(), false));
-		
+
 		assertTrue(instance.removeDataStore(datastore, true));
 		assertFalse(instance.existsDatastore(workspace.getName(), datastore.getName(), false));
 	}
