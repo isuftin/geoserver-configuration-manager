@@ -40,6 +40,9 @@ public class Workspace {
 	}
 
 	public void setDatastores(List<Datastore> datastores) {
+		for (Datastore datastore : datastores) {
+			datastore.setWorkspaceName(this.name);
+		}
 		this.datastores = datastores;
 	}
 

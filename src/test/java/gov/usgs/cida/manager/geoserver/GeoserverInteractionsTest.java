@@ -56,30 +56,18 @@ public class GeoserverInteractionsTest implements IntegrationTests {
 	public void testIsAvailable() throws MalformedURLException {
 		System.out.println("testIsAvailable");
 		GeoserverInteractions instance = new GeoserverInteractions(
-				geoserverEndpoint, 
-				GeoserverInteractions.DEFAULT_USER, 
+				geoserverEndpoint,
+				GeoserverInteractions.DEFAULT_USER,
 				GeoserverInteractions.DEFAULT_PASS);
 		assertTrue(instance.isAvailable());
 	}
 
 	@Test
-	public void testExistsDatastore() throws MalformedURLException {
-		System.out.println("testExistsDatastore");
-		GeoserverInteractions instance = new GeoserverInteractions(
-				geoserverEndpoint, 
-				GeoserverInteractions.DEFAULT_USER, 
-				GeoserverInteractions.DEFAULT_PASS);
-		assertTrue(instance.existsDatastore("topp", "states_shapefile", false));
-		assertTrue(instance.existsDatastore("topp", "taz_shapes", false));
-		assertFalse(instance.existsDatastore("topp", "tasmania_wateR_bodies", false));
-	}
-	
-	@Test
-	public void testCreateAndReadWorkspace()  throws MalformedURLException, URISyntaxException {
+	public void testCreateAndReadWorkspace() throws MalformedURLException, URISyntaxException {
 		System.out.println("testCreateAndReadWorkspace");
 		GeoserverInteractions instance = new GeoserverInteractions(
-				geoserverEndpoint, 
-				GeoserverInteractions.DEFAULT_USER, 
+				geoserverEndpoint,
+				GeoserverInteractions.DEFAULT_USER,
 				GeoserverInteractions.DEFAULT_PASS);
 		assertTrue(instance.createWorkspace("workspace.test", null));
 		assertTrue(instance.existsWorkspace("workspace.test", false));
@@ -88,7 +76,17 @@ public class GeoserverInteractionsTest implements IntegrationTests {
 		assertFalse(instance.existsWorkspace("test.workspace.tesT", false));
 		assertFalse(instance.existsWorkspace("this.doesnt.exist", false));
 	}
-	
-	
+
+	@Test
+	public void testExistsDatastore() throws MalformedURLException {
+		System.out.println("testExistsDatastore");
+		GeoserverInteractions instance = new GeoserverInteractions(
+				geoserverEndpoint,
+				GeoserverInteractions.DEFAULT_USER,
+				GeoserverInteractions.DEFAULT_PASS);
+		assertTrue(instance.existsDatastore("topp", "states_shapefile", false));
+		assertTrue(instance.existsDatastore("topp", "taz_shapes", false));
+		assertFalse(instance.existsDatastore("topp", "tasmania_wateR_bodies", false));
+	}
 
 }

@@ -1,7 +1,10 @@
 package gov.usgs.cida.manager.geoserver;
 
+import gov.usgs.cida.manager.geoserver.model.Datastore;
+import gov.usgs.cida.manager.geoserver.model.Workspace;
 import it.geosolutions.geoserver.rest.GeoServerRESTManager;
 import it.geosolutions.geoserver.rest.decoder.RESTDataStoreList;
+import it.geosolutions.geoserver.rest.encoder.datastore.GSAbstractDatastoreEncoder;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -10,7 +13,7 @@ import java.net.URL;
  *
  * @author isuftin
  */
-public class GeoserverInteractions {
+class GeoserverInteractions {
 
 	protected static final String DEFAULT_USER = "admin";
 	protected static final String DEFAULT_PASS = "geoserver";
@@ -42,10 +45,18 @@ public class GeoserverInteractions {
 	}
 	
 	public boolean createWorkspace(String name, URI uri) {
-		if (uri == null) {
-			return mgr.getPublisher().createWorkspace(name);
+		Workspace workspace = new Workspace();
+		workspace.setName(name);
+		workspace.setUri(uri);
+		return createWorkspace(workspace);
+		
+	}
+	
+	public boolean createWorkspace(Workspace workspace) {
+		if (workspace.getUri() == null) {
+			return mgr.getPublisher().createWorkspace(workspace.getName());
 		} else {
-			return mgr.getPublisher().createWorkspace(name, uri);
+			return mgr.getPublisher().createWorkspace(workspace.getName(), workspace.getUri());
 		}
 	}
 	
@@ -58,5 +69,16 @@ public class GeoserverInteractions {
 			}
 		}
 		return false;
+	}
+	
+	public boolean createDataStore(String workspaceName, String datastoreName) {
+		Datastore datastore = new Datastore();
+		return true; //TODO - Do stuff here
+	}
+	
+	public boolean createDataStore(Datastore datastore) {
+		
+		mgr.getStoreManager().create(datastore.getWorkspaceName(), null);
+		return true; //TODO - Do stuff here
 	}
 }
