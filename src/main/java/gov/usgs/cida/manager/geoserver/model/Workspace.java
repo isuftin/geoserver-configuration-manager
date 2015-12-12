@@ -48,4 +48,8 @@ public class Workspace {
 		);
 	}
 
+	public void setName(String testCreateShapefileDatastoreWorkdspace, URI uri) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
 }

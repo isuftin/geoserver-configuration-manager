@@ -11,7 +11,7 @@ workspaces:
             # postgis
             # oracle
             # arcsde
-            type: shapefile
+            typeName: shapefile
             # http://www.diva-gis.org/gdata
             url: http://biogeo.ucdavis.edu/data/diva/rds/USA_rds.zip
             description: A test datastore

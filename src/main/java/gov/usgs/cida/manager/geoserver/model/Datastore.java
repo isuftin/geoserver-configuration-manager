@@ -19,12 +19,100 @@ import org.apache.commons.lang3.StringUtils;
 public class Datastore {
 
 	private Class<? extends GSAbstractDatastoreEncoder> encoder;
+	private TYPE datastoreType;
 	private String workspaceName;
 	private String name;
-	private String type;
+	private String typeName;
 	private String description;
 	private boolean enabled = false;
 	private URL url;
+	private String databaseName; // Oracle
+	private String serverName; // ArcSDE
+	private String userName; // ArcSDE
+
+	public Datastore() {
+	}
+
+	/**
+	 * Setup for PostGIS stores
+	 *
+	 * @param workspaceName
+	 * @see
+	 * it.geosolutions.geoserver.rest.encoder.datastore.GSPostGISDatastoreEncoder
+	 * @param name
+	 */
+	public Datastore(String workspaceName, String name) {
+		if (StringUtils.isBlank(workspaceName)) {
+			throw new IllegalArgumentException("Workspace name is required");
+		}
+		this.workspaceName = workspaceName;
+		this.name = name;
+		this.setDatastoreType(TYPE.POSTGIS);
+	}
+
+	/**
+	 * Setup for Shapefile and Shapefile Directory stores
+	 *
+	 * @param workspaceName
+	 * @see
+	 * it.geosolutions.geoserver.rest.encoder.datastore.GSShapefileDatastoreEncoder
+	 * @see
+	 * it.geosolutions.geoserver.rest.encoder.datastore.GSDirectoryOfShapefilesDatastoreEncoder
+	 * @param name
+	 * @param url
+	 */
+	public Datastore(String workspaceName, String name, URL url) {
+		if (StringUtils.isBlank(workspaceName)) {
+			throw new IllegalArgumentException("Workspace name is required");
+		}
+		
+		// Setting the datastore type for shapefile and shapefile directory encoders is not
+		// possible because both types take two arguments (string and URL) so more 
+		// info will be needed to solidify the type here
+		this.workspaceName = workspaceName;
+		this.name = name;
+		this.url = url;
+	}
+
+	/**
+	 * Setup for ArcSDE stores
+	 *
+	 * @param workspaceName
+	 * @see
+	 * it.geosolutions.geoserver.rest.encoder.datastore.GSArcSDEDatastoreEncoder
+	 * @param name
+	 * @param serverName
+	 * @param userName
+	 */
+	public Datastore(String workspaceName, String name, String serverName, String userName) {
+		if (StringUtils.isBlank(workspaceName)) {
+			throw new IllegalArgumentException("Workspace name is required");
+		}
+		this.workspaceName = workspaceName;
+		this.name = name;
+		this.serverName = serverName;
+		this.userName = userName;
+		this.setDatastoreType(TYPE.ARCSDE);
+	}
+
+	/**
+	 * Setup for Oracle datastores
+	 *
+	 * @param workspaceName
+	 * @see
+	 * it.geosolutions.geoserver.rest.encoder.datastore.GSOracleNGDatastoreEncoder
+	 * @param name
+	 * @param databaseName
+	 */
+	public Datastore(String workspaceName, String name, String databaseName) {
+		if (StringUtils.isBlank(workspaceName)) {
+			throw new IllegalArgumentException("Workspace name is required");
+		}
+		this.workspaceName = workspaceName;
+		this.name = name;
+		this.databaseName = databaseName;
+		this.setDatastoreType(TYPE.ORACLE);
+	}
 
 	public String getName() {
 		return name;
@@ -37,17 +125,28 @@ public class Datastore {
 		this.name = name;
 	}
 
-	public String getType() {
-		return type;
+	public String getTypeName() {
+		return typeName;
 	}
 
-	public void setType(String type) {
-		ALLOWED_TYPES typeEnum = ALLOWED_TYPES.of(type);
+	/**
+	 * Sets the datastore type name. The type name is a specific string that
+	 * describes the datastore type. This will also set the formalized datastore
+	 * type
+	 *
+	 * @see TYPE
+	 * @param typeName
+	 */
+	public void setTypeName(String typeName) {
+		TYPE typeEnum = TYPE.of(typeName);
 		if (typeEnum == null) {
-			throw new IllegalArgumentException(type + " is not an allowed datastore type");
+			throw new IllegalArgumentException(typeName + " is not an allowed datastore type");
+		}
+		if (this.datastoreType == null) {
+			this.setDatastoreType(typeEnum);
 		}
 		this.setEncoder(typeEnum.getEncoder());
-		this.type = type;
+		this.typeName = typeName;
 	}
 
 	public String getDescription() {
@@ -74,7 +173,7 @@ public class Datastore {
 		this.url = url;
 	}
 
-	void setWorkspaceName(String workspaceName) {
+	public void setWorkspaceName(String workspaceName) {
 		this.workspaceName = workspaceName;
 	}
 
@@ -82,15 +181,103 @@ public class Datastore {
 		return this.workspaceName;
 	}
 
-	public Class<? extends GSAbstractStoreEncoder> getEncoder() {
-		return encoder;
+	public GSAbstractStoreEncoder getEncoder() {
+		switch (getDatastoreType()) {
+			case SHAPEFILE:
+				return new GSShapefileDatastoreEncoder(getName(), getUrl());
+			case SHAPEFILE_DIRECTORY:
+				return new GSDirectoryOfShapefilesDatastoreEncoder(getName(), getUrl());
+			case ARCSDE:
+				return new GSArcSDEDatastoreEncoder(getName(), getServerName(), getUserName());
+			case ORACLE:
+				return new GSOracleNGDatastoreEncoder(getName(), getDatabaseName());
+			case POSTGIS:
+				return new GSPostGISDatastoreEncoder(getName());
+			default:
+				throw new IllegalArgumentException("Encoder type not found");
+		}
+
 	}
 
 	public void setEncoder(Class<? extends GSAbstractDatastoreEncoder> encoder) {
 		this.encoder = encoder;
 	}
 
-	public enum ALLOWED_TYPES {
+	/**
+	 * @return the datastoreType
+	 */
+	public TYPE getDatastoreType() {
+		return datastoreType;
+	}
+
+	/**
+	 * @param datastoreType the datastoreType to set
+	 */
+	public final void setDatastoreType(TYPE datastoreType) {
+		this.datastoreType = datastoreType;
+		if (StringUtils.isBlank(this.getTypeName())) {
+			this.setTypeName(this.datastoreType.toString());
+		}
+	}
+
+	/**
+	 * Used for Oracle datastore type
+	 *
+	 * @return the databaseName
+	 */
+	public String getDatabaseName() {
+		return databaseName;
+	}
+
+	/**
+	 * Used for Oracle datastore type
+	 *
+	 * @param databaseName the databaseName to set
+	 */
+	public void setDatabaseName(String databaseName) {
+		this.databaseName = databaseName;
+	}
+
+	/**
+	 * Used for ArcSDE type
+	 *
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
+
+	/**
+	 * Used for ArcSDE type
+	 *
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	/**
+	 * Used for ArcSDE type
+	 *
+	 * @return the serverName
+	 */
+	public String getServerName() {
+		return serverName;
+	}
+
+	/**
+	 * Used for ArcSDE type
+	 *
+	 * @param serverName the serverName to set
+	 */
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
+	}
+
+	/**
+	 * A formalized Geoserver Datastore type
+	 */
+	public enum TYPE {
 		SHAPEFILE("shapefile", GSShapefileDatastoreEncoder.class),
 		SHAPEFILE_DIRECTORY("shapefileDirectory", GSDirectoryOfShapefilesDatastoreEncoder.class),
 		POSTGIS("postgis", GSPostGISDatastoreEncoder.class),
@@ -99,20 +286,20 @@ public class Datastore {
 
 		private final String type;
 		private Class<? extends GSAbstractDatastoreEncoder> encoder;
-		private final static Map<String, ALLOWED_TYPES> map = new HashMap<>(ALLOWED_TYPES.values().length, 1.0f);
+		private final static Map<String, TYPE> map = new HashMap<>(TYPE.values().length, 1.0f);
 
 		static {
-			for (ALLOWED_TYPES type : ALLOWED_TYPES.values()) {
+			for (TYPE type : TYPE.values()) {
 				map.put(type.toString(), type);
 			}
 		}
 
-		ALLOWED_TYPES(String type, Class<? extends GSAbstractDatastoreEncoder> encoder) {
+		TYPE(String type, Class<? extends GSAbstractDatastoreEncoder> encoder) {
 			this.type = type;
 			this.encoder = encoder;
 		}
 
-		public static ALLOWED_TYPES of(String type) {
+		public static TYPE of(String type) {
 			return map.get(type);
 		}
 

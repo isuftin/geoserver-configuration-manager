@@ -71,14 +71,17 @@ class GeoserverInteractions {
 		return false;
 	}
 	
-	public boolean createDataStore(String workspaceName, String datastoreName) {
-		Datastore datastore = new Datastore();
-		return true; //TODO - Do stuff here
+	public boolean createDataStore(Datastore datastore) {
+		return mgr.getStoreManager().create(datastore.getWorkspaceName(), datastore.getEncoder());
 	}
 	
-	public boolean createDataStore(Datastore datastore) {
-		
-		mgr.getStoreManager().create(datastore.getWorkspaceName(), null);
-		return true; //TODO - Do stuff here
+	/**
+	 * 
+	 * @see it.geosolutions.geoserver.rest.GeoServerRESTPublisher#removeDatastore(java.lang.String, java.lang.String, boolean) 
+	 * @param datastore
+	 * @return 
+	 */
+	public boolean removeDataStore(Datastore datastore, boolean recursive) {
+		return mgr.getPublisher().removeDatastore(datastore.getWorkspaceName(), datastore.getName(), recursive);
 	}
 }
