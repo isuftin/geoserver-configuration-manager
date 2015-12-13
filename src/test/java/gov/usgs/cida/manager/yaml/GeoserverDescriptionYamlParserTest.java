@@ -1,6 +1,8 @@
 package gov.usgs.cida.manager.yaml;
 
+import gov.usgs.cida.manager.geoserver.model.Datastore;
 import gov.usgs.cida.manager.geoserver.model.GeoserverConfig;
+import gov.usgs.cida.manager.geoserver.model.Workspace;
 import java.io.File;
 import java.net.URISyntaxException;
 import org.apache.commons.io.FileUtils;
@@ -50,11 +52,14 @@ public class GeoserverDescriptionYamlParserTest {
 		assertNull(result.getWorkspaces().get(1).getUri());
 		
 		// Test datastores
-		assertEquals(result.getWorkspaces().get(0).getDatastores().size(), 1);
-		assertEquals(result.getWorkspaces().get(0).getDatastores().get(0).getName(), "yaml.test.store");
-		assertEquals(result.getWorkspaces().get(0).getDatastores().get(0).getUrl().toString(), "http://biogeo.ucdavis.edu/data/diva/rds/USA_rds.zip");
-		assertEquals(result.getWorkspaces().get(0).getDatastores().get(0).getDescription(), "A test datastore");
-		assertTrue(result.getWorkspaces().get(0).getDatastores().get(0).isEnabled());
+		Workspace workspace = result.getWorkspaces().get(0);
+		assertEquals(workspace.getDatastores().size(), 1);
+		Datastore datastore = workspace.getDatastores().get(0);
+		assertEquals(datastore.getName(), "yaml.test.store");
+		assertEquals(datastore.getUrl().toString(), "file:/some/directory/that/im/sure/is/awesome");
+		assertEquals(datastore.getDescription(), "A test datastore");
+		assertTrue(datastore.isEnabled());
+		
 	}
 
 }
