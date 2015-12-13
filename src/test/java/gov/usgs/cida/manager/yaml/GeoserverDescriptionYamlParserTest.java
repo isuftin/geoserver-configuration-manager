@@ -40,6 +40,11 @@ public class GeoserverDescriptionYamlParserTest {
 		System.out.println("parse");
 		GeoserverDescriptionYamlParser cfg = new GeoserverDescriptionYamlParser(yamlTestFile);
 		GeoserverConfig result = cfg.parse();
+		result.setUsername("geoserver");
+		result.setPassword("admin");
+		assertNotNull(result);
+		result.verify();
+		
 		// Test wipeDefaultWorkspaces
 		assertTrue(result.isWipeDefaultWorkspaces());
 		

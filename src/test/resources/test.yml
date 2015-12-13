@@ -12,9 +12,35 @@ workspaces:
             # oracle
             # arcsde
             typeName: shapefile
-            # http://www.diva-gis.org/gdata
+            # Where to store the file on the server. This must point to a 
+            # valid directory
             url: file:///some/directory/that/im/sure/is/awesome
             description: A test datastore
             enabled: true
-                
+            shapefiles:
+                # The layer name that the shapefile will have
+                - name: testShape
+                  # Where to get the file from
+                  # Use file:// to upload from the file system
+                  # Use http:// or https:// to grab the file from a remote system
+                  uri: http://something-something-something
+                  # the SRS for this shapefile. It must be an EPSG code.
+                  srs: EPSG:4326
+                  # optional
+                  # Should the shapefile be reprojected?
+                  # options:
+                  # - reproject_to_declared (Reproject from native to declared CRS)
+                  # - force declared (Use the declared CRS (ignore native))
+                  # - none (Keep native) (default)
+                  policy: REPROJECT_TO_DECLARED
+                  # optional 
+                  # The nativeCRS for this shapefile. This should be an EPSG code.
+                  # Only set if projectionPolicy is set.
+                  nativeCRS: EPSG:900913
+                  # optional
+                  # the default style to set
+                  # defaultStyle: something-here
+
+
+
     - name: another.yaml.test.workspace

@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
  * <a href="http://docs.geoserver.org/stable/en/user/rest/api/workspaces.html#workspaces">http://docs.geoserver.org/stable/en/user/rest/api/workspaces.html#workspaces</a>
  * @author isuftin
  */
-public class Workspace {
+public class Workspace implements VerifyingGSModel {
 
 	private String name;
 	private URI uri;
@@ -48,8 +48,16 @@ public class Workspace {
 		);
 	}
 
-	public void setName(String testCreateShapefileDatastoreWorkdspace, URI uri) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	@Override
+	public void verify() throws ModelVerifyException {
+		if (StringUtils.isBlank(this.name)) {
+			throw new ModelVerifyException("Workspace name is required");
+		}
+		if (this.datastores != null) {
+			for (Datastore store : this.datastores) {
+				store.verify();
+			}
+		}
 	}
 
 }

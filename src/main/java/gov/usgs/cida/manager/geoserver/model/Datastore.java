@@ -8,7 +8,9 @@ import it.geosolutions.geoserver.rest.encoder.datastore.GSOracleNGDatastoreEncod
 import it.geosolutions.geoserver.rest.encoder.datastore.GSPostGISDatastoreEncoder;
 import it.geosolutions.geoserver.rest.encoder.datastore.GSShapefileDatastoreEncoder;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,7 +18,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author isuftin
  */
-public class Datastore {
+public class Datastore implements VerifyingGSModel {
 
 	private Class<? extends GSAbstractDatastoreEncoder> encoder;
 	private TYPE datastoreType;
@@ -29,6 +31,7 @@ public class Datastore {
 	private String databaseName; // Oracle
 	private String serverName; // ArcSDE
 	private String userName; // ArcSDE
+	private List<Shapefile> shapefiles = null;
 
 	public Datastore() {
 	}
@@ -65,7 +68,7 @@ public class Datastore {
 		if (StringUtils.isBlank(workspaceName)) {
 			throw new IllegalArgumentException("Workspace name is required");
 		}
-		
+
 		// Setting the datastore type for shapefile and shapefile directory encoders is not
 		// possible because both types take two arguments (string and URL) so more 
 		// info will be needed to solidify the type here
@@ -142,7 +145,7 @@ public class Datastore {
 		if (typeEnum == null) {
 			throw new IllegalArgumentException(typeName + " is not an allowed datastore type");
 		}
-		if (this.datastoreType == null) {
+		if (this.getDatastoreType() == null) {
 			this.setDatastoreType(typeEnum);
 		}
 		this.setEncoder(typeEnum.getEncoder());
@@ -272,6 +275,52 @@ public class Datastore {
 	 */
 	public void setServerName(String serverName) {
 		this.serverName = serverName;
+	}
+
+	public List<Shapefile> getShapefiles() {
+		return new ArrayList<>(shapefiles);
+	}
+
+	public void setShapefiles(List<Shapefile> shapefiles) throws ModelVerifyException {
+		for (Shapefile shpFile : shapefiles) {
+			shpFile.verify();
+			shpFile.setWorkspace(this.workspaceName);
+			shpFile.setStoreName(this.name);
+		}
+		this.shapefiles = new ArrayList<>(shapefiles);
+	}
+
+	@Override
+	public void verify() throws ModelVerifyException {
+		if (StringUtils.isBlank(this.name)) {
+			throw new ModelVerifyException("Store name is required");
+		}
+
+		if (StringUtils.isBlank(this.typeName)) {
+			throw new ModelVerifyException("Store typeName is required");
+		}
+
+		if (this.datastoreType == null) {
+			throw new ModelVerifyException("Store type is required");
+		}
+		
+		if (this.datastoreType.equals(TYPE.ARCSDE) && StringUtils.isBlank(this.serverName)) {
+			throw new ModelVerifyException("Store type ArcSDE requires a server name");
+		}
+		
+		if (this.datastoreType.equals(TYPE.ARCSDE) && StringUtils.isBlank(this.userName)) {
+			throw new ModelVerifyException("Store type ArcSDE requires a user name");
+		}
+		
+		if (this.datastoreType.equals(TYPE.ORACLE) && StringUtils.isBlank(this.databaseName)) {
+			throw new ModelVerifyException("Store type Oracle requires a database name");
+		}
+
+		if (this.shapefiles != null) {
+			for (Shapefile shpFile : this.shapefiles) {
+				shpFile.verify();
+			}
+		}
 	}
 
 	/**

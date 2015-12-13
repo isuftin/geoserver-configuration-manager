@@ -1,7 +1,10 @@
 package gov.usgs.cida.manager.geoserver;
 
 import gov.usgs.cida.manager.geoserver.model.GeoserverConfig;
+import gov.usgs.cida.manager.geoserver.model.ModelVerifyException;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.kohsuke.args4j.CmdLineException;
 import org.slf4j.LoggerFactory;
 
@@ -18,14 +21,25 @@ public class ConfigurationClient {
 		this.config = config;
 	}
 	
-	public static void main(String[] args) throws CmdLineException, IOException {
-		ConfigurationClient client = new ConfigurationClientBuilder().buildClient(args);
+	public static void main(String[] args) {
+		ConfigurationClient client = null;
+		try {
+			client = new ConfigurationClientBuilder().buildClient(args);
+		} catch (CmdLineException | IOException ex) {
+			LOGGER.error("There was an error when creating the configuration client", ex);
+		}
+		
 		if (client != null) {
-			client.run();
+			try {
+				client.run();
+			} catch (ModelVerifyException ex) {
+				LOGGER.error("There was an error while verifying the configuration", ex);
+			}
 		}
 	}
 
-	private boolean run() {
+	private boolean run() throws ModelVerifyException {
+		this.config.verify();
 		return true;
 	}
 
