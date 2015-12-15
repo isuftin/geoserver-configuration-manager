@@ -3,8 +3,6 @@ package gov.usgs.cida.manager.geoserver;
 import gov.usgs.cida.manager.geoserver.model.GeoserverConfig;
 import gov.usgs.cida.manager.geoserver.model.ModelVerifyException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.kohsuke.args4j.CmdLineException;
 import org.slf4j.LoggerFactory;
 

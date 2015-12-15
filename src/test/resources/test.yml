@@ -1,7 +1,9 @@
 ---
 wipeDefaultWorkspaces: true
+stopOnError: true
 workspaces:
     - name: yaml.test.workspace
+      # optional
       uri: yaml.test.workspace.uri
       datastores:
           - name: yaml.test.store
@@ -15,6 +17,7 @@ workspaces:
             # Where to store the file on the server. This must point to a 
             # valid directory
             url: file:///some/directory/that/im/sure/is/awesome
+            # optional
             description: A test datastore
             enabled: true
             shapefiles:

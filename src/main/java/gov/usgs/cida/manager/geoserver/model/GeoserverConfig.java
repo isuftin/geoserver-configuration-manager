@@ -14,6 +14,7 @@ public class GeoserverConfig implements VerifyingGSModel {
 	private String password;
 	private List<Workspace> workspaces = null;
 	private boolean wipeDefaultWorkspaces = false;
+	private boolean stopOnError = true;
 
 	public List<Workspace> getWorkspaces() {
 		return new ArrayList<>(workspaces);
