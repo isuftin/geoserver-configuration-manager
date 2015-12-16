@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Represents a GeoServer workspace
@@ -58,6 +59,19 @@ public class Workspace implements VerifyingGSModel {
 				store.verify();
 			}
 		}
+	}
+
+	@Override
+	public String toString() {
+
+		ToStringBuilder builder = new ToStringBuilder(this)
+				.append("name", this.name);
+		
+		if (this.uri != null) {
+			builder.append("uri", this.uri.toASCIIString());
+		}
+		
+		return builder.toString();
 	}
 
 }

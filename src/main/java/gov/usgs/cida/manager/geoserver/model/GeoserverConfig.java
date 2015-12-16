@@ -1,5 +1,6 @@
 package gov.usgs.cida.manager.geoserver.model;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -13,8 +14,8 @@ public class GeoserverConfig implements VerifyingGSModel {
 	private String username;
 	private String password;
 	private List<Workspace> workspaces = null;
-	private boolean wipeDefaultWorkspaces = false;
 	private boolean stopOnError = true;
+	private URL endpoint;
 
 	public List<Workspace> getWorkspaces() {
 		return new ArrayList<>(workspaces);
@@ -22,14 +23,6 @@ public class GeoserverConfig implements VerifyingGSModel {
 
 	public void setWorkspaces(List<Workspace> workspaces) {
 		this.workspaces = new ArrayList<>(workspaces);
-	}
-
-	public boolean isWipeDefaultWorkspaces() {
-		return wipeDefaultWorkspaces;
-	}
-
-	public void setWipeDefaultWorkspaces(boolean wipeDefaultWorkspaces) {
-		this.wipeDefaultWorkspaces = wipeDefaultWorkspaces;
 	}
 
 	public String getUsername() {
@@ -48,6 +41,18 @@ public class GeoserverConfig implements VerifyingGSModel {
 		this.password = password;
 	}
 
+	public void setEndpoint(URL endpoint) {
+		this.endpoint = endpoint;
+	}
+
+	public boolean isStopOnError() {
+		return stopOnError;
+	}
+
+	public void setStopOnError(boolean stopOnError) {
+		this.stopOnError = stopOnError;
+	}
+
 	@Override
 	public void verify() throws ModelVerifyException {
 		if (StringUtils.isBlank(this.username)) {
@@ -57,12 +62,24 @@ public class GeoserverConfig implements VerifyingGSModel {
 		if (StringUtils.isBlank(this.password)) {
 			throw new ModelVerifyException("Geoserver Config password is required");
 		}
+		
+		if (this.endpoint == null || 
+				(!this.endpoint.getProtocol().equals("http") && !this.endpoint.getProtocol().equals("https"))) {
+			throw new ModelVerifyException("Geoserver endpoint is required to be an HTTP or HTTPS endpoint");
+		}
 
 		if (this.workspaces != null) {
 			for (Workspace workspace : this.workspaces) {
 				workspace.verify();
 			}
 		}
+	}
+
+	/**
+	 * @return the endpoint
+	 */
+	public URL getEndpoint() {
+		return endpoint;
 	}
 
 }

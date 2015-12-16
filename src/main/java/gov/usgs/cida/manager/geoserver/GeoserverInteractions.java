@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 import org.apache.commons.httpclient.NameValuePair;
 
 /**
@@ -118,5 +119,9 @@ class GeoserverInteractions {
 			GSResourceEncoder.ProjectionPolicy policy, String defaultStyle) throws IOException {
 		return publisher.publishShp(workspace, storeName, storeParams, datasetName,
 				method, shapefile, srs, nativeCRS, policy, defaultStyle);
+	}
+
+	List<String> getWorkspaceNames() {
+		return reader.getWorkspaceNames();
 	}
 }

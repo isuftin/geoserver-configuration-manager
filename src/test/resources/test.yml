@@ -1,5 +1,4 @@
 ---
-wipeDefaultWorkspaces: true
 stopOnError: true
 workspaces:
     - name: yaml.test.workspace

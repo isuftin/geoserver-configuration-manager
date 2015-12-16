@@ -1,10 +1,12 @@
 package gov.usgs.cida.manager.geoserver;
 
 import gov.usgs.cida.manager.geoserver.model.GeoserverConfig;
+import gov.usgs.cida.manager.geoserver.model.ModelVerifyException;
 import gov.usgs.cida.manager.yaml.GeoserverDescriptionYamlParser;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URL;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -18,6 +20,9 @@ public class ConfigurationClientBuilder {
 
 	private static CmdLineParser parser;
 	private final PrintStream outputStream;
+	private URL endpoint;
+	private String username;
+	private String password;
 
 	public ConfigurationClientBuilder() {
 		outputStream = System.out;
@@ -47,6 +52,9 @@ public class ConfigurationClientBuilder {
 				printUsage(this.outputStream);
 			} else {
 				GeoserverConfig config = new GeoserverDescriptionYamlParser(configFile).parse();
+				config.setUsername(username);
+				config.setPassword(password);
+				config.setEndpoint(endpoint);
 				result = new ConfigurationClient(config);
 			}
 		} catch (CmdLineException | IOException ex) {
@@ -76,5 +84,35 @@ public class ConfigurationClientBuilder {
 			hidden = false)
 	protected void setFile(File file) {
 		this.configFile = file;
+	}
+	
+	@Option(name = "-e",
+			aliases = {"--endpoint"},
+			usage = "Geoserver endpoint (ex. http://localhost:8080/geoserver )",
+			metaVar = "URL",
+			required = true,
+			hidden = false)
+	protected void setEndpoint(URL endpoint) {
+		this.endpoint = endpoint;
+	}
+	
+	@Option(name = "-u",
+			aliases = {"--username"},
+			usage = "Username for Geoserver administrative user",
+			metaVar = "String",
+			required = true,
+			hidden = false)
+	protected void setUsername(String username) {
+		this.username = username;
+	}
+	
+	@Option(name = "-p",
+			aliases = {"--password"},
+			usage = "Password for Geoserver administrative user",
+			metaVar = "String",
+			required = true,
+			hidden = false)
+	protected void setPassword(String password) {
+		this.password = password;
 	}
 }

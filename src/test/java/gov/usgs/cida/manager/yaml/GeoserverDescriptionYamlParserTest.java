@@ -5,6 +5,7 @@ import gov.usgs.cida.manager.geoserver.model.GeoserverConfig;
 import gov.usgs.cida.manager.geoserver.model.Workspace;
 import java.io.File;
 import java.net.URISyntaxException;
+import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -42,11 +43,11 @@ public class GeoserverDescriptionYamlParserTest {
 		GeoserverConfig result = cfg.parse();
 		result.setUsername("geoserver");
 		result.setPassword("admin");
+		result.setEndpoint(new URL("http://127.0.0.1:8080/geoserver"));
 		assertNotNull(result);
 		result.verify();
 		
-		// Test wipeDefaultWorkspaces
-		assertTrue(result.isWipeDefaultWorkspaces());
+		assertTrue(result.isStopOnError());
 		
 		System.out.println(result.getWorkspaces());
 		// Test workspaces
