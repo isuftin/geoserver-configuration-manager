@@ -1,10 +1,20 @@
 ---
+# If any errors are encountered during the run, stop immediately. Otherwise, push ahead
 stopOnError: true
+# Geoserver containes one or more workspaces
+# See http://docs.geoserver.org/stable/en/user/webadmin/data/workspaces.html
 workspaces:
+    # The name of the workspace to create.
     - name: yaml.test.workspace
       # optional
+      # It is recommended using a URL associated with your project, with perhaps 
+      # a different trailing identifier. For example, http://www.openplans.org/topp 
+      # is the URI for the “topp” workspace.
       uri: yaml.test.workspace.uri
+      # Each workspace can have 1..n datastores.
+      # See http://docs.geoserver.org/stable/en/user/webadmin/data/stores.html
       datastores:
+          # The name of the datastore to create
           - name: yaml.test.store
             # Types available:
             # shapefile
@@ -12,13 +22,22 @@ workspaces:
             # postgis
             # oracle
             # arcsde
+            # See http://docs.geoserver.org/stable/en/user/rest/api/datastores.html#extension
             typeName: shapefile
+            # Used if the store type is shapefile or shapefileDirectory
             # Where to store the file on the server. This must point to a 
             # valid directory
             url: file:///some/directory/that/im/sure/is/awesome
             # optional
+            # a description that displays in the administration interface
             description: A test datastore
+            # enables or disables access to the store, along with all datasets defined for it
+            # defaults to false
             enabled: true
+            # Because this is a shapefile datastore, the store will contiain 
+            # a shapefile. If this were a shapefileDirectory, the 'shapefiles' 
+            # node here would be a multi-value array
+            # See http://docs.geoserver.org/stable/en/user/data/vector/shapefile.html
             shapefiles:
                 # The layer name that the shapefile will have
                 - name: testShape
@@ -31,9 +50,9 @@ workspaces:
                   # optional
                   # Should the shapefile be reprojected?
                   # options:
-                  # - reproject_to_declared (Reproject from native to declared CRS)
-                  # - force declared (Use the declared CRS (ignore native))
-                  # - none (Keep native) (default)
+                  # - REPROJECT_TO_DECLARED (Reproject from native to declared CRS)
+                  # - FORCE_DECLARES (Use the declared CRS (ignore native))
+                  # - NONE (Keep native) (default)
                   policy: REPROJECT_TO_DECLARED
                   # optional 
                   # The nativeCRS for this shapefile. This should be an EPSG code.
@@ -42,7 +61,5 @@ workspaces:
                   # optional
                   # the default style to set
                   # defaultStyle: something-here
-
-
 
     - name: another.yaml.test.workspace
