@@ -118,5 +118,5 @@ public class GeoserverInteractionsTest implements IntegrationTests {
 		assertTrue(instance.removeDataStore(datastore, true));
 		assertFalse(instance.existsDatastore(workspace.getName(), datastore.getName(), false));
 	}
-
+	
 }

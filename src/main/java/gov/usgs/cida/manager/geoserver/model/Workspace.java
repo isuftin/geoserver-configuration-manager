@@ -39,6 +39,9 @@ public class Workspace implements VerifyingGSModel {
 	}
 
 	public List<Datastore> getDatastores() {
+		if (datastores == null) {
+			return new ArrayList<>();
+		}
 		return new ArrayList<>(datastores);
 	}
 

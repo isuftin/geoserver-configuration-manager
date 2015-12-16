@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  *
@@ -25,7 +26,7 @@ public class Datastore implements VerifyingGSModel {
 	private String workspaceName;
 	private String name;
 	private String typeName;
-	private String description;
+	private String description = "";
 	private boolean enabled = false;
 	private URL url;
 	private String databaseName; // Oracle
@@ -278,6 +279,9 @@ public class Datastore implements VerifyingGSModel {
 	}
 
 	public List<Shapefile> getShapefiles() {
+		if (shapefiles == null) {
+			return new ArrayList<>();
+		}
 		return new ArrayList<>(shapefiles);
 	}
 
@@ -288,6 +292,18 @@ public class Datastore implements VerifyingGSModel {
 			shpFile.setStoreName(this.name);
 		}
 		this.shapefiles = new ArrayList<>(shapefiles);
+	}
+
+	@Override
+	public String toString() {
+		ToStringBuilder builder = new ToStringBuilder(this)
+				.append("name", this.name)
+				.append("workspace", this.workspaceName)
+				.append("type", this.datastoreType.toString())
+				.append("description", this.description)
+				.append("enabled", this.enabled);
+
+		return builder.toString();
 	}
 
 	@Override
@@ -303,15 +319,15 @@ public class Datastore implements VerifyingGSModel {
 		if (this.datastoreType == null) {
 			throw new ModelVerifyException("Store type is required");
 		}
-		
+
 		if (this.datastoreType.equals(TYPE.ARCSDE) && StringUtils.isBlank(this.serverName)) {
 			throw new ModelVerifyException("Store type ArcSDE requires a server name");
 		}
-		
+
 		if (this.datastoreType.equals(TYPE.ARCSDE) && StringUtils.isBlank(this.userName)) {
 			throw new ModelVerifyException("Store type ArcSDE requires a user name");
 		}
-		
+
 		if (this.datastoreType.equals(TYPE.ORACLE) && StringUtils.isBlank(this.databaseName)) {
 			throw new ModelVerifyException("Store type Oracle requires a database name");
 		}

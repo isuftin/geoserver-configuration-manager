@@ -3,6 +3,7 @@ package gov.usgs.cida.manager.geoserver;
 import gov.usgs.cida.manager.geoserver.model.Datastore;
 import gov.usgs.cida.manager.geoserver.model.Workspace;
 import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
+import it.geosolutions.geoserver.rest.decoder.RESTDataStoreList;
 import it.geosolutions.geoserver.rest.encoder.GSResourceEncoder;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -33,15 +34,30 @@ class GeoserverInteractions {
 		storeManager = new GeoserverStoreManager(geoserverEndpoint, user, pass);
 	}
 
-	public boolean isAvailable() {
+	protected boolean isAvailable() {
 		return reader.existGeoserver();
 	}
 
-	public boolean existsDatastore(String workspace, String datastore, boolean ignoreCase) {
+	/**
+	 * Uses a Datastore object to test for existence of a datastore. Ignores the
+	 * case of the data store name.
+	 *
+	 * @param datastore
+	 * @return
+	 */
+	protected boolean existsDatastore(Datastore datastore) {
+		return this.existsDatastore(datastore, true);
+	}
+
+	protected boolean existsDatastore(Datastore datastore, boolean ignoreCase) {
+		return this.existsDatastore(datastore.getWorkspaceName(), datastore.getName(), ignoreCase);
+	}
+
+	protected boolean existsDatastore(String workspace, String datastore, boolean ignoreCase) {
 		return reader.existsDatastore(workspace, datastore, ignoreCase);
 	}
 
-	public boolean createWorkspace(String name, URI uri) {
+	protected boolean createWorkspace(String name, URI uri) {
 		Workspace workspace = new Workspace();
 		workspace.setName(name);
 		workspace.setUri(uri);
@@ -49,7 +65,7 @@ class GeoserverInteractions {
 
 	}
 
-	public boolean createWorkspace(Workspace workspace) {
+	protected boolean createWorkspace(Workspace workspace) {
 		return publisher.createWorkspace(workspace);
 	}
 
@@ -61,8 +77,26 @@ class GeoserverInteractions {
 	 * @param recurse
 	 * @return
 	 */
-	public boolean removeWorkspace(String name, boolean recurse) {
+	protected boolean removeWorkspace(String name, boolean recurse) {
 		return publisher.removeWorkspace(name, recurse);
+	}
+
+	/**
+	 * Uses the Workspace model to check for the existence of a workspace.
+	 * Ignores case.
+	 *
+	 * @see
+	 * gov.usgs.cida.manager.geoserver.GeoserverInteractions#existsWorkspace(java.lang.String,
+	 * boolean)
+	 * @param workspace
+	 * @return
+	 */
+	protected boolean existsWorkspace(Workspace workspace) {
+		return this.existsWorkspace(workspace, true);
+	}
+
+	protected boolean existsWorkspace(Workspace workspace, boolean ignoreCase) {
+		return this.existsWorkspace(workspace.getName(), ignoreCase);
 	}
 
 	/**
@@ -72,12 +106,16 @@ class GeoserverInteractions {
 	 * @param ignoreCase
 	 * @return
 	 */
-	public boolean existsWorkspace(String workspace, boolean ignoreCase) {
+	protected boolean existsWorkspace(String workspace, boolean ignoreCase) {
 		return reader.existsWorkspace(workspace, ignoreCase);
 	}
 
-	public boolean createDataStore(Datastore datastore) {
+	protected boolean createDataStore(Datastore datastore) {
 		return storeManager.create(datastore.getWorkspaceName(), datastore.getEncoder());
+	}
+
+	protected boolean updateDatastore(Datastore datastore) {
+		return storeManager.update(datastore.getWorkspaceName(), datastore.getEncoder());
 	}
 
 	/**
@@ -88,7 +126,7 @@ class GeoserverInteractions {
 	 * @param datastore
 	 * @return
 	 */
-	public boolean removeDataStore(Datastore datastore, boolean recursive) {
+	protected boolean removeDataStore(Datastore datastore, boolean recursive) {
 		return publisher.removeDatastore(datastore.getWorkspaceName(), datastore.getName(), recursive);
 	}
 
@@ -114,14 +152,15 @@ class GeoserverInteractions {
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean publishShapefile(String workspace, String storeName, NameValuePair[] storeParams,
+	protected boolean publishShapefile(String workspace, String storeName, NameValuePair[] storeParams,
 			String datasetName, GeoServerRESTPublisher.UploadMethod method, URI shapefile, String srs, String nativeCRS,
 			GSResourceEncoder.ProjectionPolicy policy, String defaultStyle) throws IOException {
 		return publisher.publishShp(workspace, storeName, storeParams, datasetName,
 				method, shapefile, srs, nativeCRS, policy, defaultStyle);
 	}
 
-	List<String> getWorkspaceNames() {
+	protected List<String> getWorkspaceNames() {
 		return reader.getWorkspaceNames();
 	}
+
 }

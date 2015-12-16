@@ -13,11 +13,14 @@ public class GeoserverConfig implements VerifyingGSModel {
 
 	private String username;
 	private String password;
-	private List<Workspace> workspaces = null;
+	private List<Workspace> workspaces;
 	private boolean stopOnError = true;
 	private URL endpoint;
 
 	public List<Workspace> getWorkspaces() {
+		if (workspaces == null) {
+			return new ArrayList<>();
+		}
 		return new ArrayList<>(workspaces);
 	}
 
